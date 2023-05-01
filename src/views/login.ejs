@@ -13,6 +13,23 @@
           <h4>Sign in</h4>
           <p>Do you have an account with us? Sign in!</p>
 
+          <form action="/login/login" method="POST">
+            <input type = "hidden" name = "_csrf" value=<%= csrfToken %>>
+            <div class="mb-3">
+              <label class="form-label">Email address</label>
+              <input type="email" class="form-control" name="email" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Password</label>
+              <input type="password" class="form-control" name="password" />
+            </div>
+            <button type="submit" class="btn btn-primary">Sign in</button>
+            
+          </form>
+        </div>
+        <div class="col-lg-4">
+          <h4>Create your account</h4>
+          <p>If you don't have an account, you can create one now!</p>
           <form action="/login/register" method="POST">
             <input type = "hidden" name = "_csrf" value=<%= csrfToken %>>
             <div class="mb-3">
@@ -24,21 +41,6 @@
               <input type="password" class="form-control" name="password" />
             </div>
             <button type="submit" class="btn btn-primary">Create account</button>
-          </form>
-        </div>
-        <div class="col-lg-4">
-          <h4>Create your account</h4>
-          <p>If you don't have an account, you can create one now!</p>
-          <form action="/login/register" method="POST">
-            <div class="mb-3">
-              <label class="form-label">Email address</label>
-              <input type="email" class="form-control" name="email" />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Password</label>
-              <input type="password" class="form-control" name="password" />
-            </div>
-            <button type="submit" class="btn btn-primary">Sign in</button>
           </form>
         </div>
       </div>
