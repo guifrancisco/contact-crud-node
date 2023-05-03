@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
-const ContatoSchema = new mongoose.Schema({
+const ContactSchema = new mongoose.Schema({
   name: { type: String, required: true },
   lastname: { type: String, required: false, default: '' },
   email: { type: String, required: false, default: '' },
@@ -9,31 +9,25 @@ const ContatoSchema = new mongoose.Schema({
   creationdate: { type: Date, default: Date.now }
 });
 
-const ContatoModel = mongoose.model('Contato', ContatoSchema);
+const ContactModel = mongoose.model('Contact', ContactSchema);
 
-function Contato (body) {
+function Contact (body) {
   this.body = body;
   this.errors = [];
-  this.contato = null;
+  this.contact = null;
 };
 
-Contato.buscaPorId = async function (id) {
-  if(typeof id !== 'string') return;
-  const user = await ContatoModel.findById(id);
-  return user;
-}
 
-Contato.prototype.register = async function(){
+Contact.prototype.register = async function(){
   this.valida();
 
   if(this.errors.length > 0) return;
 
-  this.contato = await ContatoModel.create(this.body);
+  this.contact = await ContactModel.create(this.body);
 };
 
-Contato.prototype.valida = function(){  
+Contact.prototype.valida = function(){  
   this.cleanUp();
-
 
   //validation
   //the email needs to be valid
@@ -42,11 +36,9 @@ Contato.prototype.valida = function(){
   if(!this.body.email && !this.body.phone ){
     this.errors.push('At least one contact must be send: e-mail or phone');
   };
-
-
 };
 
-Contato.prototype.cleanUp = function(){
+Contact.prototype.cleanUp = function(){
   for(const key in this.body){
     if (typeof this.body[key] !== 'string'){
       this.body[key] = '';
@@ -62,5 +54,32 @@ Contato.prototype.cleanUp = function(){
   };
 };
 
+Contact.prototype.edit = async function(id){
+  if(typeof id !== 'string') return;
 
-module.exports = Contato;
+  this.valida();
+  if(this.errors.length > 0) return;
+  this.contact = await ContactModel.findByIdAndUpdate(id, this.body, { new: true });
+
+};
+
+Contact.findById = async function (id) {
+  if(typeof id !== 'string') return;
+  const user = await ContactModel.findById(id);
+  return user;
+}
+
+Contact.findContacts = async function () {
+  const contacts = await ContactModel.find()
+  .sort({creationdate: -1});
+  return contacts;
+}
+
+Contact.delete = async function (id) {
+  if(typeof id !== 'string') return;
+  const contact = await ContactModel.findOneAndDelete({_id: id});
+  return contact;
+}
+
+
+module.exports = Contact;
